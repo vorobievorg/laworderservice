@@ -1,0 +1,319 @@
+openapi: 3.0.0
+info:
+  title: laworder
+  version: '1.0'
+  description: ''
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /lawOrder:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LawOrder'
+        '400':
+          description: Bad Request
+      operationId: get-saasda
+    parameters: []
+    post:
+      summary: ''
+      operationId: post-lawOrder
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LawOrder'
+    put:
+      summary: ''
+      operationId: put-lawOrder
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LawOrder'
+  '/lawOrder/{lawOrderId}':
+    parameters:
+      - schema:
+          type: string
+        name: lawOrderId
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LawOrder'
+      operationId: get-lawOrder-lawOrderId
+    delete:
+      summary: ''
+      operationId: delete-lawOrder-lawOrderId
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    Customer:
+      type: object
+      description: ответчики
+      properties:
+        customerId:
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426655440000
+          description: идентификатор
+        firstName:
+          type: string
+          description: Имя
+          example: Василий
+        middleName:
+          type: string
+          description: Отчество
+          example: Васильевич
+        lastName:
+          type: string
+          description: Фамилия
+          example: Васильев
+        birthDate:
+          type: string
+          description: Дата рождения
+          format: date
+          example: '2000-01-01'
+        passportSerial:
+          type: string
+          description: серия паспорта
+          example: '2222'
+        passportNumber:
+          type: string
+          description: номер паспорта
+          example: '666666'
+        passportDate:
+          type: string
+          format: date
+          description: дата выдачи
+          example: '2020-01-01'
+        passportDivsion:
+          type: string
+          description: код подразделения
+          example: 000-000
+        passportType:
+          type: string
+          description: Вид документа
+          enum:
+            - Паспорт РФ
+            - Паспорт иностранного гражданина
+          default: Паспорт РФ
+        customerType:
+          type: string
+          description: тип ответчика
+          enum:
+            - Заемщик
+            - Созаемщик
+            - Поручитель
+            - Наследник
+          default: Наследник
+        debtItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/DebtItem'
+      required:
+        - customerId
+        - firstName
+        - lastName
+        - birthDate
+        - passportSerial
+        - passportNumber
+    Deal:
+      type: object
+      description: 'Договор, который является предметов решения суда'
+      properties:
+        dealId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426655440000
+          description: идентификатор
+        numebr:
+          type: string
+          description: номер договора
+          example: 0000-КУ/00
+        date:
+          type: string
+          format: date
+          example: '2019-01-01'
+          description: дата договора
+        fund:
+          type: string
+          description: Валюта договора
+          example: '810'
+          enum:
+            - '810'
+            - '840'
+            - '978'
+            - '756'
+            - '826'
+          default: '810'
+        lawOrderFund:
+          type: string
+          description: Валюта по решению суда
+          example: '810'
+          enum:
+            - '810'
+            - '840'
+            - '978'
+            - '756'
+            - '826'
+          default: '810'
+        lawOrderFundRate:
+          type: number
+          description: Курс установленный по решению суда
+          example: 70.77
+        lawOrderCreditRate:
+          type: number
+          description: Процентная ставка по решению суда в %
+          example: 10.5
+        lawOrderFeeRate:
+          type: number
+          description: Ставка по пеням по решению суда
+          example: 0.2
+        lawOrderFeeRateType:
+          type: string
+          description: Тип стваки пени
+          example: День
+          enum:
+            - Год
+            - День
+          default: День
+        debtItems:
+          type: array
+          items:
+            $ref: '#/components/schemas/DebtItem'
+    DebtItem:
+      type: object
+      description: Элемент задолженности
+      properties:
+        debtItemType:
+          type: string
+          description: вид задолженности
+          enum:
+            - BASEQTY
+            - PERCENTQTY
+            - DEBTBASEQTY
+            - PERCENTDEBTBASEQTY
+            - DEBTPERCENTQTY
+            - FINEQTY
+            - BASEFEEQTY
+            - PERCENTFEEQTY
+            - MONTHLYREWARDQTY
+            - DOCDUEFINEQTY
+            - PREMFEEQTY
+            - FEELAWQTY
+            - DUELAWQTY
+            - DEBTNDBASEQTY
+            - DEBTNPERCENTQTY
+            - POSTAGELAWQTY
+            - ADLITEMLAWQTY
+            - VALHOSTAGELAWQTY
+            - DEBTNDPERCENTQTY
+            - NDBASEQTY
+            - NDPERCENTQTY
+            - NPERCENTQTY
+            - PremPercentQty
+            - PERCENTDEBTCREDITQTY
+            - RESTRUCTFEEQTY
+        debtQty:
+          type: number
+          description: сумма по решению суда
+          example: 10000.22
+        debtBalanceOut:
+          type: number
+          description: остаток задолженности
+          example: 10000.22
+        priority:
+          type: integer
+          description: 'приоритет погашения, чем меньше, тем раньше'
+          example: 0
+    LawOrder:
+      type: object
+      description: Решение суда
+      required:
+        - lawOrderId
+        - number
+      properties:
+        lawOrderId:
+          type: string
+          format: uuid
+          example: 123e4567-e89b-12d3-a456-426655440000
+          description: идентификатор
+        number:
+          type: string
+          example: '3333333'
+          description: Номер иска
+        numberOfCase:
+          type: string
+          example: '3333333'
+          description: Номер гражданского дела
+        documentName:
+          type: string
+          example: документ
+          description: Наименование документа
+        date:
+          type: string
+          format: date
+          example: '2021-01-01'
+          description: Дата решения суда
+        numberOfExecOrder:
+          type: string
+          example: '33333'
+          description: Номер исполнительного листа /судебного приказа
+        dateOfExecOrder:
+          type: string
+          format: date
+          description: Дата исполнительного листа /судебного приказа
+          example: '2021-01-01'
+        status:
+          type: string
+          description: статус судебного решения
+          enum:
+            - открыто
+            - закрыто
+            - отменено
+            - введено
+          default: введено
+        orderKind:
+          type: string
+          description: тип судебного решения
+          enum:
+            - взыскание
+            - выселение
+          default: взыскание
+        deals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Deal'
+        customers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
